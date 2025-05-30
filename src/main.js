@@ -15,7 +15,7 @@ export default async ({ req, res, log, error }) => {
     }));
   }
 
-  if (req.path === "/api/") {
+  if (req.path === "/api/reedem") {
     const { token, solutions } = req.bodyJSON;
     if (!token || !solutions) {
       error("Invalid");
