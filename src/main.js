@@ -1,20 +1,20 @@
 import Cap from "@cap.js/server";
 
 export default async ({ req, res, log, error }) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
   const cap = new Cap({
     tokens_store_path: ".data/tokensList.json",
   });
 
   if (req.path === "/api/challenge") {
     log("Creating challenge");
-    const challenge = cap.createChallenge({
+    return res.json(cap.createChallenge({
       "challengeCount": 50,
       "challengeSize": 32,
       "challengeDifficulty": 4,
       "expiresMs": 300000
-    })
-    log(challenge);
-    return res.json(challenge);
+    }));
   }
 
   if (req.path === "/api/reedem") {
