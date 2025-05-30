@@ -1,35 +1,32 @@
-import { Client, Users } from 'node-appwrite';
+import Cap from "@cap.js/server";
 
-// This Appwrite function will be executed every time your function is triggered
 export default async ({ req, res, log, error }) => {
-  // You can use the Appwrite SDK to interact with other services
-  // For this example, we're using the Users service
-  const client = new Client()
-    .setEndpoint(process.env.APPWRITE_FUNCTION_API_ENDPOINT)
-    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-    .setKey(req.headers['x-appwrite-key'] ?? '');
-  const users = new Users(client);
+  const cap = new Cap({
+    tokens_store_path: ".data/tokensList.json",
+  });
 
-  try {
-    const response = await users.list();
-    // Log messages and errors to the Appwrite Console
-    // These logs won't be seen by your end users
-    log(`Total users: ${response.total}`);
-  } catch(err) {
-    error("Could not list users: " + err.message);
+  if (req.path === "/api/challenge") {
+    log("Creating challenge");
+    return res.json(cap.createChallenge({
+      "challengeCount": 50,
+      "challengeSize": 32,
+      "challengeDifficulty": 4,
+      "expiresMs": 300000
+    }));
   }
 
-  // The req object contains the request data
-  if (req.path === "/ping") {
-    // Use res object to respond with text(), json(), or binary()
-    // Don't forget to return a response!
-    return res.text("Pong");
+  if (req.path === "/api/") {
+    const { token, solutions } = req.bodyJSON;
+    if (!token || !solutions) {
+      error("Invalid");
+      return res.status(400).json({ success: false });
+    }
+    res.json(await cap.redeemChallenge({ token, solutions }));
   }
 
+  error("Invalid path");
   return res.json({
-    motto: "Build like a team of hundreds_",
-    learn: "https://appwrite.io/docs",
-    connect: "https://appwrite.io/discord",
-    getInspired: "https://builtwith.appwrite.io",
+    success: false,
+    error: "Invalid",
   });
 };
