@@ -1,6 +1,9 @@
 import Cap from "@cap.js/server";
 
 export default async ({ req, res, log, error }) => {
+  const cors = {
+    'Access-Control-Allow-Origin': '*',
+  }
   const cap = new Cap({
     tokens_store_path: ".data/tokensList.json",
   });
@@ -12,11 +15,7 @@ export default async ({ req, res, log, error }) => {
       "challengeSize": 32,
       "challengeDifficulty": 4,
       "expiresMs": 300000
-    }), 200, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    });
+    }), 200, cors);
   }
 
   if (req.path === "/api/redeem") {
@@ -25,11 +24,7 @@ export default async ({ req, res, log, error }) => {
       error("Invalid");
       return res.status(400).json({ success: false });
     }
-    res.json(await cap.redeemChallenge({ token, solutions }), 200, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    });
+    res.json(await cap.redeemChallenge({ token, solutions }), 200, cors);
   }
 
   error("Invalid path");
