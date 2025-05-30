@@ -28,7 +28,10 @@ export default async ({ req, res, log, error }) => {
     const body = req.bodyJson;
     if (!body || !body.token || !body.solutions) {
       error("Invalid");
-      return res.status(400).json({ success: false });
+      return res.json({
+        success: false,
+        error: "Invalid",
+      }, 400);
     }
     const { token, solutions } = body;
     res.json(await cap.redeemChallenge({ token, solutions }), 200, cors);
