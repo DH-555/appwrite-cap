@@ -10,6 +10,10 @@ export default async ({ req, res, log, error }) => {
     tokens_store_path: ".data/tokensList.json",
   });
 
+  if (req.method === "OPTIONS") {
+    return res.json({}, 204, cors);
+  }
+
   if (req.path === "/api/challenge") {
     log("Creating challenge");
     return res.json(cap.createChallenge({
@@ -21,11 +25,12 @@ export default async ({ req, res, log, error }) => {
   }
 
   if (req.path === "/api/redeem") {
-    const { token, solutions } = req.bodyJSON;
-    if (!token || !solutions) {
+    const body = req.bodyJson;
+    if (!body || !body.token || !body.solutions) {
       error("Invalid");
       return res.status(400).json({ success: false });
     }
+    const { token, solutions } = body;
     res.json(await cap.redeemChallenge({ token, solutions }), 200, cors);
   }
 
