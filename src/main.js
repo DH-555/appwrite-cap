@@ -3,6 +3,8 @@ import Cap from "@cap.js/server";
 export default async ({ req, res, log, error }) => {
   const cors = {
     'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
   }
   const cap = new Cap({
     tokens_store_path: ".data/tokensList.json",
