@@ -20,7 +20,7 @@ export default async ({ req, res, log, error }) => {
       "challengeCount": 50,
       "challengeSize": 32,
       "challengeDifficulty": 4,
-      "expiresMs": 300000
+      "expiresMs": 30000000000
     }), 200, cors);
   }
 
@@ -43,5 +43,5 @@ export default async ({ req, res, log, error }) => {
   return res.json({
     success: false,
     error: "Invalid",
-  });
+  }, 404);
 };
