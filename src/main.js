@@ -7,12 +7,14 @@ export default async ({ req, res, log, error }) => {
 
   if (req.path === "/api/challenge") {
     log("Creating challenge");
-    return res.json(cap.createChallenge({
+    const challenge = cap.createChallenge({
       "challengeCount": 50,
       "challengeSize": 32,
       "challengeDifficulty": 4,
       "expiresMs": 300000
-    }));
+    })
+    log(challenge);
+    return res.json(challenge);
   }
 
   if (req.path === "/api/reedem") {
