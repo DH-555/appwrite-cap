@@ -34,7 +34,9 @@ export default async ({ req, res, log, error }) => {
       }, 400);
     }
     const { token, solutions } = body;
-    res.json(await cap.redeemChallenge({ token, solutions }), 200, cors);
+    const redeem = await cap.redeemChallenge({ token, solutions });
+    log(redeem);
+    return res.json(redeem, 200, cors);
   }
 
   error("Invalid path");
